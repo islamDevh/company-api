@@ -22,8 +22,13 @@ class NewMessageRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         if ($this->is('api/*')) {
+            //return messages only
             $response = ApiResponse::sendResponse(422, 'Validation Errors', $validator->messages()->all());
             throw new ValidationException($validator, $response);
+
+            //return messeges with name of field
+            // $response = ApiResponse::sendResponse(422, 'Validation Errors', $validator->errors());
+            // throw new ValidationException($validator, $response);
         }
     }
 
@@ -55,5 +60,5 @@ class NewMessageRequest extends FormRequest
             'phone'   => 'Phone',
             'message' => 'Message',
         ];
-    }
+    } 
 }

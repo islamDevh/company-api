@@ -21,7 +21,7 @@ class MesaageController extends Controller
         $data = $request->validated();
         $record = Message::create($data);
         if ($record) {
-            return ApiResponse::sendResponse(201, 'Sent Successfully', []);
+            return ApiResponse::sendResponse(201, 'stored Successfully', []);
         }
     }
 }
