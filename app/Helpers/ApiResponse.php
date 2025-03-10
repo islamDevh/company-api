@@ -8,7 +8,7 @@ class ApiResponse
     {
         $response = [
             'status'    => $code,
-            'message'       => $msg,
+            'message'   => $msg,
             'data'      => $data,
         ];
 

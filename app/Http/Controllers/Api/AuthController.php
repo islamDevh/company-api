@@ -20,9 +20,9 @@ class AuthController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [], [
-            'name' => 'Name',
-            'email' => 'Email',
-            'password' => 'Password',
+            'name' => 'the Name',
+            'email' => 'the Email',
+            'password' => 'the Password',
         ]);
 
         if ($validator->fails()) {
@@ -30,12 +30,12 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        $data['token'] = $user->createToken('APIcourse')->plainTextToken;
-        $data['name'] = $user->name;
+        $data['token'] = $user->createToken('MobileApp')->plainTextToken;
+        $data['name']  = $user->name;
         $data['email'] = $user->email;
 
         return ApiResponse::sendResponse(201, 'User Account Created Successfully', $data);
@@ -64,5 +64,17 @@ class AuthController extends Controller
         } else {
             return ApiResponse::sendResponse(401, 'These credentials doesn\'t exist', null);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return ApiResponse::sendResponse(200, 'Logged out successfully', null);
+    }
+
+    public function refresh(Request $request)
+    {
+        $token = $request->user()->createToken('MyAuthApp')->plainTextToken;
+        return ApiResponse::sendResponse(200, 'Token Refreshed Successfully', ['token' => $token]);
     }
 }
