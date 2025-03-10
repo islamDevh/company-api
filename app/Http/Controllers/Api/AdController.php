@@ -13,7 +13,7 @@ class AdController extends Controller
 {
     public function index()
     {
-        $ads = Ad::latest()->paginate(10);
+        $ads = Ad::latest()->paginate(1);
         if (count($ads) > 0) {
             if ($ads->total() > $ads->perPage()) {
                 $data = [
@@ -60,6 +60,7 @@ class AdController extends Controller
         $ads = Ad::when($word != null, function ($q) use ($word) {
             $q->where('title', 'like', '%' . $word . '%');
         })->latest()->get();
+        
         if (count($ads) > 0) {
             return ApiResponse::sendResponse(200, 'Search completed', AdResource::collection($ads));
         }
@@ -76,7 +77,10 @@ class AdController extends Controller
 
     public function update(AdRequest $request, $adId)
     {
-        $ad = Ad::findOrFail($adId);
+        $ad = Ad::find($adId);
+        if (!$ad) {
+            return ApiResponse::sendResponse(404, 'Ad not found', []);
+        }
         if ($ad->user_id != $request->user()->id) {
             return ApiResponse::sendResponse(403, 'You aren\'t allowed to take this action', []);
         }
@@ -88,7 +92,10 @@ class AdController extends Controller
 
     public function delete(Request $request, $adId)
     {
-        $ad = Ad::findOrFail($adId);
+        $ad = Ad::find($adId);
+        if (!$ad) {
+            return ApiResponse::sendResponse(404, 'Ad not found', []);
+        }
         if ($ad->user_id != $request->user()->id) {
             return ApiResponse::sendResponse(403, 'You aren\'t allowed to take this action', []);
         }

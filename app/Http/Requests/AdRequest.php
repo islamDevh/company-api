@@ -52,8 +52,8 @@ class AdRequest extends FormRequest
         return [
             'title'     => 'Title',
             'phone'     => 'Phone',
-            'text'      => 'Description',
-            'domain_id' => 'Domain',
+            'text'      => 'the Description',
+            'domain_id' => 'the Domain',
         ];
     }
 }
